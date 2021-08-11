@@ -8,7 +8,6 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-	"syscall"
 )
 
 // Basename 返回某个文件路径的文件名，suffix如果提供了则去掉改后缀
@@ -115,15 +114,17 @@ func FilePutContents(filename string, content []byte, fileMode os.FileMode) (int
 	return n, nil
 }
 
-// FileATime 获取文件上次访问时间，返回为秒的时间戳
-func FileATime(filename string) int64 {
+// FileATime 获取文件上次访问时间
+// 对应windows下使用：
+// fileSys := sys.(*syscall.Win32FileAttributeData)
+// second := fileSys.LastAccessTime.Nanoseconds() / 1e9
+// 对于linux下使用
+// fileSys := sys.(*syscall.Stat_t)
+// second := fileSys.Atim.Sec
+func FileATime(filename string) (sys interface{}) {
 	info, _ := os.Stat(filename)
-	sys := info.Sys()
-	if sys != nil {
-		fileSys := sys.(*syscall.Win32FileAttributeData)
-		return fileSys.LastAccessTime.Nanoseconds() / 1e9
-	}
-	return 0
+	sys = info.Sys()
+	return
 }
 
 // FileMTime 获取文件修改时间
