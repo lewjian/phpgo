@@ -131,3 +131,33 @@ func Date(format string, timestamp ...int64) string {
 func Time() int64 {
 	return time.Now().Unix()
 }
+
+// ParseDate 解析一个日期字符串
+// layouts省略则采用默认2006-01-02 15:04:05
+func ParseDate(dateStr string, layouts... string) (time.Time, error) {
+	timeLayout := DefaultDateTimeFormatTpl
+	if len(layouts) > 0 {
+		timeLayout = layouts[0]
+	}
+
+	loc, err := time.LoadLocation("Local")
+	if err != nil {
+		return time.Time{}, err
+	}
+	t, err := time.ParseInLocation(timeLayout, dateStr, loc)
+	if err != nil {
+		return time.Time{}, err
+	}
+	return t, nil
+}
+
+// ToTimestamp 将一个日期/时间转为时间戳，出错则返回-1
+// layouts省略则采用默认2006-01-02 15:04:05
+func ToTimestamp(dateStr string, layouts... string) int64 {
+	t, err := ParseDate(dateStr, layouts...)
+	if err != nil {
+		return -1
+	}
+	return t.Unix()
+}
+

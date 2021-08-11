@@ -298,7 +298,7 @@ func UCWords(s string) string {
 	if s == "" {
 		return ""
 	}
-	reg,err := regexp.Compile(`[\t\r\n(\r\n)\f\v\s]+`)
+	reg, err := regexp.Compile(`[\t\r\n(\r\n)\f\v\s]+`)
 	if err != nil {
 		return s
 	}
@@ -310,3 +310,41 @@ func UCWords(s string) string {
 	}
 	return strings.TrimSpace(destStr.String())
 }
+
+// PregMatch 使用正则匹配字符串s中第一个匹配的数据
+func PregMatch(pattern, s string) ([]string, error) {
+	reg, err := regexp.Compile(pattern)
+	if err != nil {
+		return nil, err
+	}
+	return reg.FindStringSubmatch(s), nil
+}
+
+// PregMatchAll 使用正则匹配字符串s中所有匹配的数据
+func PregMatchAll(pattern, s string) ([][]string, error) {
+	reg, err := regexp.Compile(pattern)
+	if err != nil {
+		return nil, err
+	}
+	return reg.FindAllStringSubmatch(s, -1), nil
+}
+
+// PregReplace 正则替换
+func PregReplace(pattern, repl, src string) (string, error) {
+	reg, err := regexp.Compile(pattern)
+	if err != nil {
+		return "", err
+	}
+	return reg.ReplaceAllString(src, repl), nil
+}
+
+// PregSplit 正则字符串拆分为数组
+func PregSplit(pattern, src string) ([]string, error) {
+	reg, err := regexp.Compile(pattern)
+	if err != nil {
+		return nil, err
+	}
+	return reg.Split(src, -1), nil
+}
+
+

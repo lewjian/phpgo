@@ -3,6 +3,7 @@ package phpgo
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -282,10 +283,33 @@ func ArrayWalk(data interface{}, callback func(item interface{}, index int) bool
 	if ref.Type().Kind().String() != "slice" {
 		return fmt.Errorf("参数必须是一个切片")
 	}
-	for i := 0; i < ref.Len(); i ++ {
+	for i := 0; i < ref.Len(); i++ {
 		if !callback(ref.Index(i).Interface(), i) {
 			break
 		}
 	}
 	return nil
+}
+
+// JoinInt 将一个int slice转为sep分割的字符串
+func JoinInt(a []int, sep string) string {
+	var s strings.Builder
+	sLen := len(a)
+	for i, item := range a {
+		s.WriteString(strconv.Itoa(item))
+		if i < sLen-1 {
+			s.WriteString(sep)
+		}
+	}
+	return s.String()
+}
+
+// ArrayInt2ArrayString 将int slice转为string slice
+func ArrayInt2ArrayString(in []int) []string {
+	length := len(in)
+	data := make([]string, length)
+	for i := 0; i < length; i++ {
+		data[i] = strconv.Itoa(in[i])
+	}
+	return data
 }

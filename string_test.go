@@ -202,3 +202,16 @@ func TestUCWords(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestPregMatch(t *testing.T) {
+	s := "foobarbaz"
+	pattern := `(foo)(bar)(baz)`
+	log.Println(PregMatch(pattern, s))
+}
+
+func TestPregReplace(t *testing.T) {
+	s := "foobarbaz"
+	pattern := `(foo)(bar)(baz)`
+	repl := "hello, world"
+	log.Println(PregReplace(pattern, repl, s))
+}

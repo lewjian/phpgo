@@ -188,3 +188,24 @@ func MkDir(pathname string, fileMode os.FileMode, recursive bool) bool {
 func Rename(src, dest string) error {
 	return os.Rename(src, dest)
 }
+
+// ChMod 改变文件权限
+func ChMod(filename string, mode os.FileMode) bool {
+	return os.Chmod(filename, mode) == nil
+}
+
+// ChDir 改变当前目录
+func ChDir(dir string) bool {
+	return os.Chdir(dir) == nil
+}
+
+// GetCWD 取得当前工作目录
+func GetCWD() string {
+	dir, _ := os.Getwd()
+	return dir
+}
+
+// ReadDir 读取目录，golang里面不用opendir
+func ReadDir(dir string) ([]os.DirEntry, error) {
+	return os.ReadDir(dir)
+}

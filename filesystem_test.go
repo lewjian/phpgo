@@ -73,3 +73,12 @@ func TestDirname(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestReadDir(t *testing.T) {
+	dir := "c:\\"
+	set,_ := ReadDir(dir)
+	for _, item := range set {
+		log.Println(item.Name())
+		log.Println(item.Info())
+	}
+}
