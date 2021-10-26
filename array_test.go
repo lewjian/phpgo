@@ -25,13 +25,13 @@ func TestInArray(t *testing.T) {
 }
 
 func TestArrayUnique(t *testing.T) {
-	data := []string{"a", "b","a", "c", "hel", "hel"}
+	data := []string{"a", "b", "a", "c", "hel", "hel"}
 	res := ArrayUnique(data)
 	log.Println(res.([]string))
 }
 
 func TestArrayChunkInt(t *testing.T) {
-	data := []int{1,2,3,4,5,6,7,8}
+	data := []int{1, 2, 3, 4, 5, 6, 7, 8}
 	log.Println(ArrayChunkInt(data, 3))
 	log.Println(ArrayChunkInt(data, 0))
 	log.Println(ArrayChunkInt(data, 5))
@@ -39,7 +39,7 @@ func TestArrayChunkInt(t *testing.T) {
 }
 
 func TestArrayChunkString(t *testing.T) {
-	data := []string{"1","2","2", "5","hel", "45sfd"}
+	data := []string{"1", "2", "2", "5", "hel", "45sfd"}
 	log.Println(ArrayChunkString(data, 3))
 	log.Println(ArrayChunkString(data, 0))
 	log.Println(ArrayChunkString(data, 5))
@@ -52,20 +52,20 @@ func TestArrayMerge(t *testing.T) {
 }
 
 func TestArraySearch(t *testing.T) {
-	log.Println(ArraySearch(1, []int{2,3,4,1,6}))
-	log.Println(ArraySearch("abc", []int{2,3,4,1,6}))
+	log.Println(ArraySearch(1, []int{2, 3, 4, 1, 6}))
+	log.Println(ArraySearch("abc", []int{2, 3, 4, 1, 6}))
 	log.Println(ArraySearch("abc", []string{"ashd", "salchj", "abc"}))
 	type S struct {
-		ID int
+		ID   int
 		Name string
 	}
 	log.Println(ArraySearch(S{
 		ID:   2,
 		Name: "liujian",
-	}, []S{{2,"liujian"}}))
+	}, []S{{2, "liujian"}}))
 }
 func TestArrayWalk(t *testing.T) {
-	data := []int{123,456,234,8, 45,23}
+	data := []int{123, 456, 234, 8, 45, 23}
 	var result []int
 	ArrayWalk(data, func(item interface{}, index int) bool {
 		if index > 2 {
@@ -77,4 +77,28 @@ func TestArrayWalk(t *testing.T) {
 	})
 	log.Println(data, result)
 
+}
+
+func BenchmarkInArray(b *testing.B) {
+	a := getBenchArray()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		InArray(i, a)
+	}
+}
+
+func BenchmarkInArrayInt(b *testing.B) {
+	a := getBenchArray()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		InArrayInt(i, a)
+	}
+}
+
+func getBenchArray() []int {
+	a := make([]int, 100000)
+	for i := 0; i < 100000; i++ {
+		a[i] = i + 1
+	}
+	return a
 }

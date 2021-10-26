@@ -102,15 +102,15 @@ func TestStrSplit(t *testing.T) {
 	s := "我爱天安门，i iove tiananmen"
 	log.Println("原始长度:", len([]rune(s)))
 	res := StrSplit(s, 1)
-	log.Printf("len=%d, v=%v",len(res), res)
+	log.Printf("len=%d, v=%v", len(res), res)
 	res = StrSplit(s, 2)
-	log.Printf("len=%d, v=%v",len(res), res)
+	log.Printf("len=%d, v=%v", len(res), res)
 	res = StrSplit(s, 3)
-	log.Printf("len=%d, v=%v",len(res), res)
+	log.Printf("len=%d, v=%v", len(res), res)
 	res = StrSplit(s, 10)
-	log.Printf("len=%d, v=%v",len(res), res)
+	log.Printf("len=%d, v=%v", len(res), res)
 	res = StrSplit(s, 50)
-	log.Printf("len=%d, v=%v",len(res), res)
+	log.Printf("len=%d, v=%v", len(res), res)
 }
 
 func TestStrRev(t *testing.T) {
@@ -214,4 +214,28 @@ func TestPregReplace(t *testing.T) {
 	pattern := `(foo)(bar)(baz)`
 	repl := "hello, world"
 	log.Println(PregReplace(pattern, repl, s))
+}
+
+func TestStripTags(t *testing.T) {
+	type args struct {
+		src string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "s",
+			args: args{src: `<body class="abc" id='123'><div><h1 class="title" data-id="123">这是标题&nbsp;</h1></div>`},
+			want: "这是标题",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := StripTags(tt.args.src); got != tt.want {
+				t.Errorf("StripTags() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
