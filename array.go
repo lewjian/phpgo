@@ -1,6 +1,7 @@
 package phpgo
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -312,4 +313,21 @@ func ArrayInt2ArrayString(in []int) []string {
 		data[i] = strconv.Itoa(in[i])
 	}
 	return data
+}
+
+// ArrayReverse 数组反转，需要传指针进来，仅支持slice，array请转为slice
+func ArrayReverse(array interface{}) error {
+	ref := reflect.ValueOf(array)
+	if ref.Kind() != reflect.Ptr {
+		return errors.New("参数必须为指针类型")
+	}
+	ref = ref.Elem()
+	if ref.Kind() != reflect.Slice {
+		return errors.New("参数必须为slice")
+	}
+	swap := reflect.Swapper(ref.Interface())
+	for i, j := 0, ref.Len()-1; i < j; i, j = i+1, j-1 {
+		swap(i, j)
+	}
+	return nil
 }

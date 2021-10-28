@@ -102,3 +102,36 @@ func getBenchArray() []int {
 	}
 	return a
 }
+
+func TestArrayReverse(t *testing.T) {
+	type args struct {
+		array interface{}
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name:    "[]string",
+			args:    args{array: &[]string{"123", "cbda", "9710", "helloword", "good"}},
+			wantErr: false,
+		}, {
+			name:    "[]int",
+			args:    args{array: &[]int{1, 2, 3, 4, 54, 6}},
+			wantErr: false,
+		}, {
+			name:    "[]map[string]string",
+			args:    args{array: &[]map[string]string{{"ac": "13"}, {"ya": "ho"}}},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := ArrayReverse(tt.args.array); (err != nil) != tt.wantErr {
+				t.Errorf("ArrayReverse() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			log.Println(tt.args.array)
+		})
+	}
+}
