@@ -1,137 +1,202 @@
 package phpgo
 
 import (
-	"log"
+	"reflect"
 	"testing"
 )
 
+type M struct {
+	x int
+	y int
+}
+
 func TestInArray(t *testing.T) {
-	item := 123
-	data := []int{124, 3543, 23, 12}
-	expect := false
-	res := InArray(item, data)
-	if res != expect {
-		t.Fail()
+	// 整形
+	item1 := 325
+	arrayData1 := []int{1, 325, 57, 324}
+	if got := InArray(item1, arrayData1); !got {
+		t.Errorf("item=%v, arrayData=%v, got=%v", item1, arrayData1, got)
 	}
-	if false != InArray("12", []int{12}) {
-		t.Fail()
+
+	item1 = 325
+	arrayData1 = []int{1, 3251, 57, 324}
+	if got := InArray(item1, arrayData1); got {
+		t.Errorf("item=%v, arrayData=%v, got=%v", item1, arrayData1, got)
 	}
-	if true != InArray("12", []string{"12", "2"}) {
-		t.Fail()
+
+	// 浮点型
+	item2 := 12.24
+	arrayData2 := []float64{12.124, 45, 3532.24, 12.24, 4642.2}
+	if got := InArray(item2, arrayData2); !got {
+		t.Errorf("item=%v, arrayData=%v, got=%v", item2, arrayData2, got)
 	}
-	if true != InArray(12.43, []float64{12.43, 242.12}) {
-		t.Fail()
+	item2 = 12.243
+	arrayData2 = []float64{12.124, 45, 3532.24, 12.24, 4642.2}
+	if got := InArray(item2, arrayData2); got {
+		t.Errorf("item=%v, arrayData=%v, got=%v", item2, arrayData2, got)
 	}
+	// 字符串
+	item3 := "hello"
+	arrayData3 := []string{"a", "c", "e", "hello"}
+	if got := InArray(item3, arrayData3); !got {
+		t.Errorf("item=%v, arrayData=%v, got=%v", item3, arrayData3, got)
+	}
+	item3 = "ahfoah"
+	arrayData3 = []string{"a", "c", "e", "hello"}
+	if got := InArray(item2, arrayData2); got {
+		t.Errorf("item=%v, arrayData=%v, got=%v", item3, arrayData3, got)
+	}
+
 }
 
 func TestArrayUnique(t *testing.T) {
-	data := []string{"a", "b", "a", "c", "hel", "hel"}
-	res := ArrayUnique(data)
-	log.Println(res.([]string))
+	s := []int{1, 2, 5, 2, 5, 6, 1}
+	got := ArrayUnique(s)
+	if !reflect.DeepEqual([]int{1, 2, 5, 6}, got) {
+		t.Errorf("item=%v, got=%v", s, got)
+	}
+	s1 := []float64{1, 2, 5, 2, 5, 6, 1}
+	got1 := ArrayUnique(s1)
+	if !reflect.DeepEqual([]float64{1, 2, 5, 6}, got1) {
+		t.Errorf("item=%v, got=%v", s1, got1)
+	}
+	s2 := []string{"a", "a", "b", "b", "c", "e", "c", "e"}
+
+	got2 := ArrayUnique(s2)
+	if !reflect.DeepEqual([]string{"a", "b", "c", "e"}, got2) {
+		t.Errorf("item=%v, got=%v", s2, got2)
+	}
 }
 
-func TestArrayChunkInt(t *testing.T) {
-	data := []int{1, 2, 3, 4, 5, 6, 7, 8}
-	log.Println(ArrayChunkInt(data, 3))
-	log.Println(ArrayChunkInt(data, 0))
-	log.Println(ArrayChunkInt(data, 5))
-	log.Println(ArrayChunkInt(data, 10))
+func TestArraySum(t *testing.T) {
+	s := []int{1, 2, 5, 2}
+	got := ArraySum(s)
+	want := 10
+	if want != got {
+		t.Errorf("item=%v, want=%v, got=%v", s, want, got)
+	}
+
+	s1 := []float64{1.5, 2.5, 5, 2}
+	got1 := ArraySum(s1)
+	want1 := 11.0
+	if want1 != got1 {
+		t.Errorf("item=%v, want=%v, got=%v", s1, want1, got1)
+	}
 }
 
-func TestArrayChunkString(t *testing.T) {
-	data := []string{"1", "2", "2", "5", "hel", "45sfd"}
-	log.Println(ArrayChunkString(data, 3))
-	log.Println(ArrayChunkString(data, 0))
-	log.Println(ArrayChunkString(data, 5))
-	log.Println(ArrayChunkString(data, 10))
+func TestArrayChunk(t *testing.T) {
+	d := []M{
+		{1, 2},
+		{2, 3},
+		{3, 4},
+		{4, 5},
+		{5, 6},
+	}
+	got := ArrayChunk(d, 2)
+	want := [][]M{
+		{{1, 2}, {2, 3}},
+		{{3, 4}, {4, 5}},
+		{{5, 6}},
+	}
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("item=%v, want=%v, got=%v", d, want, got)
+	}
+}
+
+func TestArrayDiff(t *testing.T) {
+	d := []int{1, 2, 3, 4, 5}
+	s1 := []int{2, 3}
+	s2 := []int{5}
+	want := []int{1, 4}
+	got := ArrayDiff(d, s1, s2)
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("item=%v, want=%v, got=%v", d, want, got)
+	}
+}
+
+func TestArrayIntersect(t *testing.T) {
+	s1 := []int{1, 2, 3}
+	s2 := []int{2}
+	want := s2
+	got := ArrayIntersect(s1, s2)
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("item=%v, want=%v, got=%v", s1, want, got)
+	}
 }
 
 func TestArrayMerge(t *testing.T) {
-	data, err := ArrayMerge([]string{"aksfh", "s"}, []string{"ascgjhag"})
-	log.Println(data.([]string), err)
+	s1 := []int{1, 2, 3}
+	s2 := []int{2}
+	want := []int{1, 2, 3, 2}
+	got := ArrayMerge(s1, s2)
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("item=%v, want=%v, got=%v", s1, want, got)
+	}
 }
 
 func TestArraySearch(t *testing.T) {
-	log.Println(ArraySearch(1, []int{2, 3, 4, 1, 6}))
-	log.Println(ArraySearch("abc", []int{2, 3, 4, 1, 6}))
-	log.Println(ArraySearch("abc", []string{"ashd", "salchj", "abc"}))
-	type S struct {
-		ID   int
-		Name string
+	s1 := []int{1, 2, 3}
+	n := 3
+	want := 2
+	got := ArraySearch[int](n, s1)
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("item=%v, want=%v, got=%v", s1, want, got)
 	}
-	log.Println(ArraySearch(S{
-		ID:   2,
-		Name: "liujian",
-	}, []S{{2, "liujian"}}))
 }
+
+func TestArrayProduct(t *testing.T) {
+	s1 := []int{1, 2, 3}
+	want := 6
+	got := ArrayProduct(s1)
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("item=%v, want=%v, got=%v", s1, want, got)
+	}
+}
+
 func TestArrayWalk(t *testing.T) {
-	data := []int{123, 456, 234, 8, 45, 23}
-	var result []int
-	ArrayWalk(data, func(item interface{}, index int) bool {
-		if index > 2 {
+	s1 := []int{1, 2, 3}
+	ArrayWalk(s1, func(item, index int) bool {
+		if item == 2 {
+			s1[index] = item * 10
 			return false
 		}
-		num := item.(int)
-		result = append(result, num*3)
 		return true
 	})
-	log.Println(data, result)
-
-}
-
-func BenchmarkInArray(b *testing.B) {
-	a := getBenchArray()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		InArray(i, a)
+	want := []int{1, 20, 3}
+	if !reflect.DeepEqual(want, s1) {
+		t.Errorf("item=%v, want=%v, got=%v", s1, want, s1)
 	}
 }
 
-func BenchmarkInArrayInt(b *testing.B) {
-	a := getBenchArray()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		InArrayInt(i, a)
+func TestJoin(t *testing.T) {
+	s1 := []int{1, 2, 3}
+	got := Join(s1, "|")
+	want := "1|2|3"
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("item=%v, want=%v, got=%v", s1, want, got)
 	}
-}
 
-func getBenchArray() []int {
-	a := make([]int, 100000)
-	for i := 0; i < 100000; i++ {
-		a[i] = i + 1
+	s2 := []string{"a", "c", "d"}
+	got2 := Join(s2, ",")
+	want2 := "a,c,d"
+	if !reflect.DeepEqual(want2, got2) {
+		t.Errorf("item=%v, want=%v, got=%v", s2, want2, got2)
 	}
-	return a
 }
 
 func TestArrayReverse(t *testing.T) {
-	type args struct {
-		array interface{}
+	s := []int{1, 2, 3}
+	want := []int{3, 2, 1}
+	ArrayReverse(s)
+	if !reflect.DeepEqual(s, want) {
+		t.Errorf("item=%v, want=%v, got=%v", s, want, s)
 	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		{
-			name:    "[]string",
-			args:    args{array: &[]string{"123", "cbda", "9710", "helloword", "good"}},
-			wantErr: false,
-		}, {
-			name:    "[]int",
-			args:    args{array: &[]int{1, 2, 3, 4, 54, 6}},
-			wantErr: false,
-		}, {
-			name:    "[]map[string]string",
-			args:    args{array: &[]map[string]string{{"ac": "13"}, {"ya": "ho"}}},
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := ArrayReverse(tt.args.array); (err != nil) != tt.wantErr {
-				t.Errorf("ArrayReverse() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			log.Println(tt.args.array)
-		})
+
+	s1 := []string{"1", "s", "e", "2"}
+	want1 := []string{"2", "e", "s", "1"}
+	ArrayReverse(s1)
+
+	if !reflect.DeepEqual(s1, want1) {
+		t.Errorf("item=%v, want=%v, got=%v", s1, want1, s1)
 	}
 }

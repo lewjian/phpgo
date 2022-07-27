@@ -33,10 +33,10 @@ func Implode(separator string, data []string) string {
 	return strings.Join(data, separator)
 }
 
-// Join 切片转为指定字符串连接的为字符串
-func Join(separator string, data []string) string {
-	return strings.Join(data, separator)
-}
+//// Join 切片转为指定字符串连接的为字符串
+//func Join(separator string, data []string) string {
+//	return strings.Join(data, separator)
+//}
 
 // LTrim 去除字符串左边指定字符串
 func LTrim(str, deleteStr string) string {

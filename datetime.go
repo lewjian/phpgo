@@ -61,7 +61,7 @@ func StrToTime(format string, relativeTimestamp ...int64) (time.Time, error) {
 			// 偶数，必须是year/month/day/hour/minute/second/
 			// 尝试去掉最后一个s，如果存在
 			timePeriod := strings.TrimRight(str, "s")
-			if !InArrayString(timePeriod, allowTimePeriod) || num < 0 {
+			if !InArray(timePeriod, allowTimePeriod) || num < 0 {
 				return time.Time{}, fmt.Errorf("format参数格式不正确, %s不支持", str)
 			}
 			count := symbol * num
@@ -134,7 +134,7 @@ func Time() int64 {
 
 // ParseDate 解析一个日期字符串
 // layouts省略则采用默认2006-01-02 15:04:05
-func ParseDate(dateStr string, layouts... string) (time.Time, error) {
+func ParseDate(dateStr string, layouts ...string) (time.Time, error) {
 	timeLayout := DefaultDateTimeFormatTpl
 	if len(layouts) > 0 {
 		timeLayout = layouts[0]
@@ -153,11 +153,10 @@ func ParseDate(dateStr string, layouts... string) (time.Time, error) {
 
 // ToTimestamp 将一个日期/时间转为时间戳，出错则返回-1
 // layouts省略则采用默认2006-01-02 15:04:05
-func ToTimestamp(dateStr string, layouts... string) int64 {
+func ToTimestamp(dateStr string, layouts ...string) int64 {
 	t, err := ParseDate(dateStr, layouts...)
 	if err != nil {
 		return -1
 	}
 	return t.Unix()
 }
-
